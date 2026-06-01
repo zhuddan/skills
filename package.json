@@ -1,0 +1,17 @@
+{
+  "name": "skills",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tag": "bump patch --tag --commit --push"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.11.1",
+  "dependencies": {
+    "@jsdevtools/version-bump-prompt": "^6.1.0"
+  }
+}
