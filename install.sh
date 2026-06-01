@@ -5,4 +5,6 @@ set -e
 npx skills add zhuddan/skills -g
 
 # 第三方 skills（保持引用，重跑此脚本即可跟上游更新）
-add https://github.com/vercel-labs/skills --skill find-skills -g
+npx skills add https://github.com/vercel-labs/skills --skill find-skills -g
+
+npx skills add https://github.com/anthropics/skills --skill frontend-design -g
