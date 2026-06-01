@@ -18,3 +18,5 @@ npx skills add https://github.com/planetscale/database-skills --skill mysql -g
 npx skills add https://github.com/mindrally/skills --skill typeorm -g
 
 npx skills add https://github.com/github/awesome-copilot --skill git-commit -g
+
+npx skills add https://github.com/artwist-polyakov/polyakov-claude-skills --skill ssh-remote-connection -g
