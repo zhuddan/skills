@@ -1,46 +1,55 @@
 ---
 name: rw-api
-description: 为 retentio-webapp 项目根据 API 文档生成接口请求代码。当用户要求"根据文档创建 API""为某模块创建 api""参考 docs/api_zh.md 创建接口"时使用。从 docs/api_zh.md 的某个章节提取接口，生成 src/api/<resource>.ts（请求函数）与 src/modules/<resource>/<resource>.schema.ts（类型/DTO）。
+description: Generate API request code for the retentio-webapp project based on API documentation. Use this skill when the user asks things like "create APIs from the documentation", "create APIs for a module", or "参考 docs/api_zh.md 创建接口". Extract endpoints from a section of docs/api_zh.md and generate both src/api/<resource>.ts (request functions) and src/modules/<resource>/<resource>.schema.ts (types/DTOs).
 ---
 
-# rw-api：从 API 文档生成接口代码
+# rw-api: Generate API Code from API Documentation
 
-将 `docs/api_zh.md` 中某一章节的接口，转换为两份代码：
+Convert the APIs from a specific section of `docs/api_zh.md` into two files:
 
-1. `src/modules/<resource>/<resource>.schema.ts` — 类型定义（实体、请求 DTO、响应 DTO）
-2. `src/api/<resource>.ts` — 请求函数，从 schema 导入类型
+1. `src/modules/<resource>/<resource>.schema.ts` — Type definitions (entities, request DTOs, response DTOs)
+2. `src/api/<resource>.ts` — Request functions that import types from the schema file
 
-## 流程
+## Workflow
 
-1. **确认范围**：用户会指明文档中的章节（如 "## 4. 标签"）。读取该章节，列出所有接口（方法 + 路径 + 请求体 + 响应）。若用户说明某些接口不处理（如"不需要创建卡组"），跳过它们。
+1. **Determine the scope**: The user will specify a section from the documentation (for example, "## 4. 标签"). Read that section and identify all endpoints (method, path, request body, response). If the user explicitly excludes certain endpoints (for example, "do not create deck-related APIs"), skip them.
 
-2. **参考现有约定**：动手前阅读 `src/api/decks.ts` 与 `src/modules/decks/decks.schema.ts`，严格沿用其风格。
+2. **Follow existing conventions**: Before implementing anything, read `src/api/decks.ts` and `src/modules/decks/decks.schema.ts`, and strictly follow their style and patterns.
 
-3. **写 schema 文件**：`src/modules/<resource>/<resource>.schema.ts`
-   - 实体接口用 `export interface`，每个字段带中文 JSDoc。
-   - 请求体用 `export interface XxxDTO`，可选字段用 `?`。
-   - 响应统一用全局类型 `BaseApiResult<Data, Meta>` 包裹：`export type XxxResponseDTO = BaseApiResult<{ ... }>`。`BaseApiResult` 与 `Meta` 是全局类型，无需 import。
-   - 仅当文档校验规则需要（如表单校验）才引入 `zod`；纯类型定义不要引入 zod。
+3. **Create the schema file**: `src/modules/<resource>/<resource>.schema.ts`
+   - Define entities using `export interface`, with Chinese JSDoc comments for every field.
+   - Define request payloads using `export interface XxxDTO`; optional fields should use `?`.
+   - Wrap all responses with the global type `BaseApiResult<Data, Meta>`:
+     `export type XxxResponseDTO = BaseApiResult<{ ... }>`
+     `BaseApiResult` and `Meta` are global types and should not be imported.
+   - Only import and use `zod` when validation rules from the documentation require it (for example, form validation). Do not use `zod` for pure type definitions.
 
-4. **写 api 文件**：`src/api/<resource>.ts`
+4. **Create the API file**: `src/api/<resource>.ts`
    - `import { request } from '@/utils/request'`
-   - `import type { ... } from '@/modules/<resource>/<resource>.schema'` —— **只导入实际用到的类型**。
-   - 每个函数一个具名导出，带中文 JSDoc 说明。
-   - GET：`request<ResponseDTO>('/api/...')`，不传 method。
-   - POST/PATCH：传 `method` 与 `body: JSON.stringify(data)`。
-   - PUT/DELETE（无请求体）：只传 `method`。
-   - 路径参数用模板字符串：`` `/api/decks/${deckId}/tags/${tagId}` ``。
+   - `import type { ... } from '@/modules/<resource>/<resource>.schema'` — **only import the types that are actually used**.
+   - Export each API as a named function with a Chinese JSDoc description.
+   - GET: `request<ResponseDTO>('/api/...')` without specifying a method.
+   - POST/PATCH: provide `method` and `body: JSON.stringify(data)`.
+   - PUT/DELETE (without a request body): provide only `method`.
+   - Use template strings for path parameters:
+     `` `/api/decks/${deckId}/tags/${tagId}` ``
 
-5. **验证**：对两个文件运行 `pnpm eslint <file>`（项目用 pnpm，禁止 npm/yarn），修掉所有告警——尤其是"已声明但未使用"的多余 import。
+5. **Validate**: Run `pnpm eslint <file>` on both files (the project uses pnpm; do not use npm or yarn). Fix all warnings and errors, especially unused imports.
 
-## 命名约定
+## Naming Conventions
 
-- 函数名按动作：`getAllTags` / `getTag` / `createTag` / `updateTag` / `deleteTag`；关联类用 `associateXToY` / `removeXFromY` / `getYTags`。
-- 响应类型名：单条 `XxxResponseDTO`，列表 `XxxListResponseDTO`，删除 `DeleteXxxResponseDTO`。
+- Function names should follow the action:
+  `getAllTags` / `getTag` / `createTag` / `updateTag` / `deleteTag`
+  Association-related functions should use:
+  `associateXToY` / `removeXFromY` / `getYTags`
+- Response type names:
+  - Single item: `XxxResponseDTO`
+  - List: `XxxListResponseDTO`
+  - Delete: `DeleteXxxResponseDTO`
 
-## 参考样例
+## Reference Examples
 
-api 文件（`src/api/decks.ts` 风格）：
+API file (following the style of `src/api/decks.ts`):
 
 ```ts
 import { request } from '@/utils/request'
@@ -62,9 +71,9 @@ export function createDeck(data: CreateOrUpdateDeckDTO) {
     body: JSON.stringify(data),
   })
 }
-```
+````
 
-schema 文件（`src/modules/decks/decks.schema.ts` 风格）：
+Schema file (following the style of `src/modules/decks/decks.schema.ts`):
 
 ```ts
 /**
@@ -87,8 +96,9 @@ export interface CreateTagDTO {
 export type TagResponseDTO = BaseApiResult<{ tag: Tag }>
 ```
 
-## 注意
+## Notes
 
-- 不处理用户明确排除的接口。
-- 不改动无关代码，不管 git 工作区。
-- 只创建/修改这两类文件，不做多余的事。
+* Do not process endpoints that the user explicitly excludes.
+* Do not modify unrelated code or interact with the git working tree.
+* Only create or modify these two file types. Do not perform any unnecessary work.
+
