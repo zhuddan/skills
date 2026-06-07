@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-# 我自己的 skills（全局安装）
+# 
 npx skills add zhuddan/skills -g
 
 # 第三方
@@ -22,3 +22,7 @@ npx skills add https://github.com/github/awesome-copilot --skill git-commit -g
 npx skills add https://github.com/artwist-polyakov/polyakov-claude-skills --skill ssh-remote-connection -g
 
 npx skills add https://github.com/shadcn/ui --skill shadcn -g
+
+npx skills add https://github.com/sickn33/antigravity-awesome-skills --skill doc-coauthoring -g
+
+npx skills add https://github.com/anthropics/skills --skill claude-api -g
