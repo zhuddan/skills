@@ -17,28 +17,5 @@ windows:
 powershell -c "irm https://raw.githubusercontent.com/zhuddan/skills/main/install.ps1 | iex"
 ```
 
-本地已 clone 时也可以：
 
-```bash
-pnpm run setup
-```
 
-### 单独安装
-
-```bash
-# 安装所有 skill
-npx skills add zhuddan/skills
-
-# 只安装某一个
-npx skills add zhuddan/skills --skill hello
-
-# 全局安装
-npx skills add zhuddan/skills -g
-```
-
-## Skills 列表
-
-| skill | 说明 |
-|-------|------|
-| test  | 测试 skill 是否加载成功 |
-| hello | 打招呼，返回"你好" |
