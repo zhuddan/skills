@@ -8,8 +8,13 @@
 
 无需 clone，直接远程拉取 `install.sh` 执行，会装上「我自己的 + 第三方」全部 skill：
 
+mac:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/zhuddan/skills/main/install.sh | bash
+```
+windows:
+```bash
+irm https://raw.githubusercontent.com/zhuddan/skills/main/install.ps1 | iex
 ```
 
 本地已 clone 时也可以：
