@@ -26,3 +26,5 @@ npx skills add https://github.com/shadcn/ui --skill shadcn -g
 npx skills add https://github.com/sickn33/antigravity-awesome-skills --skill doc-coauthoring -g
 
 npx skills add https://github.com/anthropics/skills --skill claude-api -g
+
+npx skills add https://github.com/leonxlnx/taste-skill --skill imagegen-frontend-mobile -g
