@@ -14,7 +14,7 @@ curl -fsSL https://raw.githubusercontent.com/zhuddan/skills/main/install.sh | ba
 ```
 windows:
 ```bash
-irm https://raw.githubusercontent.com/zhuddan/skills/main/install.ps1 | iex
+powershell -c "irm https://raw.githubusercontent.com/zhuddan/skills/main/install.ps1 | iex"
 ```
 
 本地已 clone 时也可以：
